@@ -1,7 +1,27 @@
 const db = require('./../configs/db.configs');
 const usersController = {
     getAllUsers: async (req, res) => {
-        const query = 'SELECT * FROM users ORDER BY id ASC';
+        const {offset, limit, search, orderBy, order} = req.query;
+        let filter = '';
+        if(search) {
+            filter += `WHERE name LIKE '${search}%' `;
+        }
+        if(orderBy) {
+            filter += `ORDER BY ${orderBy} `;
+            if(order == 'desc') {
+                filter += 'DESC '
+            }
+            else {
+                filter += 'ASC '
+            }
+        }   
+        if(offset && limit) {
+            filter += `OFFSET ${offset} `;
+        }
+        if(limit) {
+            filter += `LIMIT ${limit} `;
+        }
+        const query = `SELECT * FROM users ${filter}` ;
         try {
             const result = await db.pool.query(query);
             res.status(200).json(result.rows);
@@ -10,6 +30,36 @@ const usersController = {
             res.status(500).json(err);
         }
     },
+    getAllUsersCount: async (req, res) => {
+        const {offset, limit, search, orderBy, order} = req.query;
+        let filter = '';
+        if(search) {
+            filter += `WHERE name LIKE '${search}%' `;
+        }
+        if(orderBy) {
+            filter += `ORDER BY ${orderBy} `;
+            if(order == 'desc') {
+                filter += 'DESC '
+            }
+            else {
+                filter += 'ASC '
+            }
+        }   
+        if(offset && limit) {
+            filter += `OFFSET ${offset} `;
+        }
+        if(limit) {
+            filter += `LIMIT ${limit} `;
+        }
+        const query = `SELECT COUNT(*) FROM users ${filter}` ;
+        try {
+            const result = await db.pool.query(query);
+            res.status(200).json(result.rows);
+        }
+        catch (err) {
+            res.status(500).json(err);
+        }
+    }, 
     getUserById: async (req, res) => {
         const id = req.params.id;
         const query = `SELECT * FROM users WHERE id = ${id}`;
@@ -45,7 +95,7 @@ const usersController = {
     },
     updateUser: async (req, res) => {
         const {id, name, email} = req.body; 
-        const query = `UPDATE users SET name = ($1), email= ($2) WHERE id = ($3)`;
+        const query = `UPDATE users SET name = ($1), email = ($2) WHERE id = ($3)`;
         try {
             const result = await db.pool.query(query, [name, email, id]);
             res.status(200).json(result.rows);
