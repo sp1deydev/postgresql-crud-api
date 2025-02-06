@@ -1,11 +1,11 @@
 const db = require('./../configs/db.configs');
 
-const usersController = {
-    getAllUsers: async (req, res) => {
+const commentsController = {
+    getAllComments: async (req, res) => {
         const {offset, limit, search, orderBy, order} = req.query;
         let filter = '';
         if(search) {
-            filter += `WHERE name LIKE '${search}%' `;
+            filter += `WHERE content LIKE '${search}%' `;
         }
         if(orderBy) {
             filter += `ORDER BY ${orderBy} `;
@@ -22,7 +22,7 @@ const usersController = {
         if(limit) {
             filter += `LIMIT ${limit} `;
         }
-        const query = `SELECT * FROM users ${filter}` ;
+        const query = `SELECT * FROM comments ${filter}` ;
         try {
             const result = await db.pool.query(query);
             res.status(200).json(result.rows);
@@ -31,11 +31,11 @@ const usersController = {
             res.status(500).json(err);
         }
     },
-    getAllUsersCount: async (req, res) => {
+    getAllCommentsCount: async (req, res) => {
         const {offset, limit, search, orderBy, order} = req.query;
         let filter = '';
         if(search) {
-            filter += `WHERE name LIKE '${search}%' `;
+            filter += `WHERE content LIKE '${search}%' `;
         }
         if(orderBy) {
             filter += `ORDER BY ${orderBy} `;
@@ -52,7 +52,7 @@ const usersController = {
         if(limit) {
             filter += `LIMIT ${limit} `;
         }
-        const query = `SELECT COUNT(*) FROM users ${filter}` ;
+        const query = `SELECT COUNT(*) FROM comments ${filter}` ;
         try {
             const result = await db.pool.query(query);
             res.status(200).json(result.rows);
@@ -60,10 +60,10 @@ const usersController = {
         catch (err) {
             res.status(500).json(err);
         }
-    }, 
-    getUserById: async (req, res) => {
+    },
+    getCommentById: async (req, res) => {
         const id = req.params.id;
-        const query = `SELECT * FROM users WHERE id = ${id}`;
+        const query = `SELECT * FROM comments WHERE id = ${id}`;
         try {
             const result = await db.pool.query(query);
             res.status(200).json(result.rows);
@@ -72,23 +72,21 @@ const usersController = {
             res.status(500).json(err);
         }
     },
-    createUser: async (req, res) => {
-        const {name, email} = req.body;
-        const query = `INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *`;
+    createComment: async (req, res) => {
+        const {userId, content} = req.body;
+        const query = `INSERT INTO comments (userid, content) VALUES ($1, $2) RETURNING *`;
         try {
-            const result = await db.pool.query(query, [name, email]);
+            const result = await db.pool.query(query, [userId, content]);
             res.status(200).json(result.rows);
         }
         catch (err) {
             res.status(500).json(err);
         }
     },
-    deleteUser: async (req, res) => {
+    deleteComment: async (req, res) => {
         const {id} = req.body; 
-        const subQuery = `DELETE FROM comments WHERE userid = ($1) RETURNING *`;
-        const query = `DELETE FROM users WHERE id = ($1)`;
+        const query = `DELETE FROM comments WHERE id = ($1) RETURNING *`;
         try {
-            await db.pool.query(subQuery, [id]);
             const result = await db.pool.query(query, [id]);
             res.status(200).json(result.rows);
         }
@@ -96,11 +94,11 @@ const usersController = {
             res.status(500).json(err);
         }
     },
-    updateUser: async (req, res) => {
-        const {id, name, email} = req.body; 
-        const query = `UPDATE users SET name = ($1), email = ($2) WHERE id = ($3) RETURNING *`;
+    updateComment: async (req, res) => {
+        const {id, content} = req.body; 
+        const query = `UPDATE comments SET content = ($1) WHERE id = ($2) RETURNING *`;
         try {
-            const result = await db.pool.query(query, [name, email, id]);
+            const result = await db.pool.query(query, [content, id]);
             res.status(200).json(result.rows);
         }
         catch (err) {
@@ -108,4 +106,4 @@ const usersController = {
         }
     },
 }
-module.exports = usersController;
+module.exports = commentsController;
