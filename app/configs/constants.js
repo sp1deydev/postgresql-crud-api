@@ -1,4 +1,4 @@
 
 module.exports = {
-    API_PATH: "postgresql"
+    API_PATH: "/api/v1"
 }

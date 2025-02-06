@@ -1,6 +1,6 @@
-const Client = require('pg').Client;
+const Pool = require('pg').Pool;
 
-const client = new Client({
+const pool = new Pool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST || 'localhost',
@@ -9,5 +9,5 @@ const client = new Client({
 })
 
 module.exports = {
-    client
+    pool
 }
