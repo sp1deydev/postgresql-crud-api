@@ -22,7 +22,7 @@ const commentsController = {
         if(limit) {
             filter += `LIMIT ${limit} `;
         }
-        const query = `SELECT * FROM comments ${filter}` ;
+        const query = `SELECT c.id, c.userid, c.content, u.name FROM comments c ${filter} INNER JOIN users u ON c.userid = u.id`;
         try {
             const result = await db.pool.query(query);
             res.status(200).json(result.rows);

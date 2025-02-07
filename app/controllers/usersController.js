@@ -85,8 +85,8 @@ const usersController = {
     },
     deleteUser: async (req, res) => {
         const {id} = req.body; 
-        const subQuery = `DELETE FROM comments WHERE userid = ($1) RETURNING *`;
-        const query = `DELETE FROM users WHERE id = ($1)`;
+        const subQuery = `DELETE FROM comments WHERE userid = ($1)`;
+        const query = `DELETE FROM users WHERE id = ($1) RETURNING *`;
         try {
             await db.pool.query(subQuery, [id]);
             const result = await db.pool.query(query, [id]);
