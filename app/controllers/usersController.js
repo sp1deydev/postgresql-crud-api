@@ -32,20 +32,11 @@ const usersController = {
         }
     },
     getAllUsersCount: async (req, res) => {
-        const {offset, limit, search, orderBy, order} = req.query;
+        const {offset, limit, search, } = req.query;
         let filter = '';
         if(search) {
             filter += `WHERE name LIKE '${search}%' `;
         }
-        if(orderBy) {
-            filter += `ORDER BY ${orderBy} `;
-            if(order == 'desc') {
-                filter += 'DESC '
-            }
-            else {
-                filter += 'ASC '
-            }
-        }   
         if(offset && limit) {
             filter += `OFFSET ${offset} `;
         }
