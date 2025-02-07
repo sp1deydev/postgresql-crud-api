@@ -16,7 +16,7 @@ const usersController = {
                 filter += 'ASC '
             }
         }   
-        if(offset && limit) {
+        if(offset) {
             filter += `OFFSET ${offset} `;
         }
         if(limit) {
@@ -37,7 +37,7 @@ const usersController = {
         if(search) {
             filter += `WHERE name LIKE '${search}%' `;
         }
-        if(offset && limit) {
+        if(offset) {
             filter += `OFFSET ${offset} `;
         }
         if(limit) {

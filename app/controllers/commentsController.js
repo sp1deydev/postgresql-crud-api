@@ -16,7 +16,7 @@ const commentsController = {
                 filter += 'ASC '
             }
         }   
-        if(offset && limit) {
+        if(offset) {
             filter += `OFFSET ${offset} `;
         }
         if(limit) {
@@ -37,7 +37,7 @@ const commentsController = {
         if(search) {
             filter += `WHERE content LIKE '${search}%' `;
         }
-        if(offset && limit) {
+        if(offset) {
             filter += `OFFSET ${offset} `;
         }
         if(limit) {
