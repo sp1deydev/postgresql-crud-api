@@ -32,16 +32,10 @@ const commentsController = {
         }
     },
     getAllCommentsCount: async (req, res) => {
-        const {offset, limit, search} = req.query;
+        const {search} = req.query;
         let filter = '';
         if(search) {
             filter += `WHERE content LIKE '${search}%' `;
-        }
-        if(offset) {
-            filter += `OFFSET ${offset} `;
-        }
-        if(limit) {
-            filter += `LIMIT ${limit} `;
         }
         const query = `SELECT COUNT(*) FROM comments ${filter}` ;
         try {

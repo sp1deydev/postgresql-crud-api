@@ -32,16 +32,10 @@ const usersController = {
         }
     },
     getAllUsersCount: async (req, res) => {
-        const {offset, limit, search, } = req.query;
+        const {search} = req.query;
         let filter = '';
         if(search) {
             filter += `WHERE name LIKE '${search}%' `;
-        }
-        if(offset) {
-            filter += `OFFSET ${offset} `;
-        }
-        if(limit) {
-            filter += `LIMIT ${limit} `;
         }
         const query = `SELECT COUNT(*) FROM users ${filter}` ;
         try {
